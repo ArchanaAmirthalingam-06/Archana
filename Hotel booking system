@@ -1,0 +1,128 @@
+import java.util.*;
+
+class Room {
+    int roomNumber;
+    String type;
+    boolean isBooked;
+    String guestName;
+
+    Room(int roomNumber, String type) {
+        this.roomNumber = roomNumber;
+        this.type = type;
+        this.isBooked = false;
+        this.guestName = "";
+    }
+
+    void display() {
+        System.out.println("Room No: " + roomNumber + " | Type: " + type + " | Booked: " + (isBooked ? "Yes" : "No") + " | Guest: " + guestName);
+    }
+}
+
+public class HotelReservationSystem {
+    static ArrayList<Room> rooms = new ArrayList<>();
+    static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        initializeRooms();
+
+        int choice;
+        do {
+            System.out.println("\n=== Hotel Reservation System ===");
+            System.out.println("1. View All Rooms");
+            System.out.println("2. Book a Room");
+            System.out.println("3. Cancel Booking");
+            System.out.println("4. Search Room");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    viewAllRooms();
+                    break;
+                case 2:
+                    bookRoom();
+                    break;
+                case 3:
+                    cancelBooking();
+                    break;
+                case 4:
+                    searchRoom();
+                    break;
+                case 5:
+                    System.out.println("Thank you for using the system!");
+                    break;
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        } while (choice != 5);
+    }
+
+    static void initializeRooms() {
+        rooms.add(new Room(101, "Standard"));
+        rooms.add(new Room(102, "Standard"));
+        rooms.add(new Room(201, "Deluxe"));
+        rooms.add(new Room(202, "Deluxe"));
+        rooms.add(new Room(301, "Suite"));
+    }
+
+    static void viewAllRooms() {
+        System.out.println("\nAvailable Rooms:");
+        for (Room room : rooms) {
+            room.display();
+        }
+    }
+
+    static void bookRoom() {
+        System.out.print("Enter room number to book: ");
+        int roomNo = scanner.nextInt();
+        scanner.nextLine();  // consume newline
+        for (Room room : rooms) {
+            if (room.roomNumber == roomNo) {
+                if (!room.isBooked) {
+                    System.out.print("Enter guest name: ");
+                    room.guestName = scanner.nextLine();
+                    room.isBooked = true;
+                    System.out.println("Room booked successfully.");
+                } else {
+                    System.out.println("Room is already booked.");
+                }
+                return;
+            }
+        }
+        System.out.println("Room not found.");
+    }
+
+    static void cancelBooking() {
+        System.out.print("Enter room number to cancel booking: ");
+        int roomNo = scanner.nextInt();
+        for (Room room : rooms) {
+            if (room.roomNumber == roomNo) {
+                if (room.isBooked) {
+                    room.isBooked = false;
+                    room.guestName = "";
+                    System.out.println("Booking cancelled successfully.");
+                } else {
+                    System.out.println("Room is not booked yet.");
+                }
+                return;
+            }
+        }
+        System.out.println("Room not found.");
+    }
+
+    static void searchRoom() {
+        System.out.print("Enter room type to search (Standard/Deluxe/Suite): ");
+        String type = scanner.next();
+        boolean found = false;
+        for (Room room : rooms) {
+            if (room.type.equalsIgnoreCase(type)) {
+                room.display();
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("No rooms found for type: " + type);
+        }
+    }
+}
